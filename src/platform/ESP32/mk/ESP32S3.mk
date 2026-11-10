@@ -102,6 +102,7 @@ MCU_COMMON_SRC = \
             ESP32/debug_esp32.c \
             ESP32/dma_esp32.c \
             ESP32/dshot_esp32.c \
+            ESP32/dshot_dedic_gpio_esp32.c \
             ESP32/exti_esp32.c \
             ESP32/interrupt_esp32.c \
             ESP32/io_esp32.c \

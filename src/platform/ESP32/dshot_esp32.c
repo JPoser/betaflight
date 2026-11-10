@@ -47,6 +47,8 @@
 
 #include "pg/motor.h"
 
+#include "dshot_dedic_gpio_esp32.h"
+
 #define DSHOT_MAX_MOTORS     4
 #define DSHOT_FRAME_BITS     16
 #define DSHOT_RMT_CLK_DIV    4      // 80MHz APB / 4 = 20MHz (50ns per tick)
@@ -283,6 +285,11 @@ static const motorVTable_t dshotVTable = {
 
 bool dshotPwmDevInit(motorDevice_t *device, const motorDevConfig_t *motorConfig)
 {
+#if defined(USE_DSHOT_DEDIC_GPIO)
+    // More than four motors: the dedicated-GPIO driver replaces RMT entirely
+    return dshotDedicGpioDevInit(device, motorConfig);
+#endif
+
     // The rmt_ll_enable_bus_clock and rmt_ll_reset_register macros require
     // a local __DECLARE_RCC_ATOMIC_ENV variable for critical section usage
     int __DECLARE_RCC_ATOMIC_ENV __attribute__((unused));
