@@ -47,6 +47,7 @@
 #include "drivers/adc.h"
 #include "drivers/bus.h"
 #include "drivers/bus_i2c.h"
+#include "drivers/bus_i2c_mux_tca9548.h"
 #include "drivers/bus_octospi.h"
 #include "drivers/bus_quadspi.h"
 #include "drivers/bus_spi.h"
@@ -681,6 +682,10 @@ void initPhase3(void)
 #endif
 #ifdef USE_I2C_DEVICE_4
     i2cInit(I2CDEV_4);
+#endif
+#ifdef USE_I2C_MUX_TCA9548
+    // Sensors behind the mux are probed later, so its channel must be open by then
+    i2cMuxTca9548Init();
 #endif
 #endif // USE_I2C
 

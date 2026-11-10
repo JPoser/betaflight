@@ -94,8 +94,10 @@ const i2cHardware_t i2cHardware[I2CDEV_COUNT] = {
     {
         .device = I2CDEV_0,
         .reg = (i2cResource_t *)I2C0,
-        .sclPins = { I2CPINDEF(PA9), I2CPINDEF(PA2), },
-        .sdaPins = { I2CPINDEF(PA8), I2CPINDEF(PA1), },
+        // I2C signals reach any pad through the GPIO matrix; PA46/PA45 are the
+        // Tildagon badge's system bus
+        .sclPins = { I2CPINDEF(PA9), I2CPINDEF(PA2), I2CPINDEF(PA46), },
+        .sdaPins = { I2CPINDEF(PA8), I2CPINDEF(PA1), I2CPINDEF(PA45), },
     },
     {
         .device = I2CDEV_1,
@@ -148,6 +150,8 @@ void i2cInit(i2cDevice_e device)
         gpio_ll_output_enable(&GPIO, pin);
         gpio_ll_input_enable(&GPIO, pin);
         gpio_ll_od_enable(&GPIO, pin);
+        // Strapping pins (e.g. GPIO45/46) come out of reset with a pull-down enabled
+        gpio_ll_pulldown_dis(&GPIO, pin);
         if (dev->pullUp) {
             gpio_ll_pullup_en(&GPIO, pin);
         }
@@ -163,6 +167,8 @@ void i2cInit(i2cDevice_e device)
         gpio_ll_output_enable(&GPIO, pin);
         gpio_ll_input_enable(&GPIO, pin);
         gpio_ll_od_enable(&GPIO, pin);
+        // Strapping pins (e.g. GPIO45/46) come out of reset with a pull-down enabled
+        gpio_ll_pulldown_dis(&GPIO, pin);
         if (dev->pullUp) {
             gpio_ll_pullup_en(&GPIO, pin);
         }

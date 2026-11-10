@@ -32,6 +32,7 @@
 
 #include "drivers/sensor.h"
 #include "drivers/accgyro/accgyro.h"
+#include "drivers/accgyro/accgyro_i2c_bmi270.h"
 #include "drivers/accgyro/gyro_sync.h"
 
 bool gyroSyncCheckUpdate(gyroDev_t *gyro)
@@ -57,6 +58,14 @@ uint16_t gyroSetSampleRate(gyroDev_t *gyro)
             gyroSampleRateHz = 3200;
             accSampleRateHz = 800;
             break;
+#if defined(USE_ACCGYRO_BMI270) && defined(USE_I2C_GYRO)
+        case BMI_270_I2C:
+            // Polled over I2C at a reduced output data rate; 1kHz is the nearest rate class
+            gyro->gyroRateKHz = GYRO_RATE_1_kHz;
+            gyroSampleRateHz = BMI270_I2C_GYRO_RATE_HZ;
+            accSampleRateHz = BMI270_I2C_ACC_RATE_HZ;
+            break;
+#endif
         case BMI_270_SPI:
 #ifdef USE_GYRO_DLPF_EXPERIMENTAL
             if (gyro->hardware_lpf == GYRO_HARDWARE_LPF_EXPERIMENTAL) {

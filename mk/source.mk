@@ -97,7 +97,9 @@ COMMON_SRC = \
             drivers/buf_writer.c \
             drivers/bus.c \
             drivers/bus_i2c_busdev.c \
+            drivers/bus_i2c_mux_tca9548.c \
             drivers/bus_i2c_utils.c \
+            drivers/accgyro/accgyro_i2c_bmi270.c \
             drivers/bus_i2c_soft.c \
             drivers/bus_octospi.c \
             drivers/bus_quadspi.c \
