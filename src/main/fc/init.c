@@ -51,6 +51,7 @@
 #include "drivers/bus_octospi.h"
 #include "drivers/bus_quadspi.h"
 #include "drivers/bus_spi.h"
+#include "drivers/charger_bq25895.h"
 #include "drivers/buttons.h"
 #include "drivers/can/can.h"
 #include "drivers/can/can_impl.h"
@@ -686,6 +687,9 @@ void initPhase3(void)
 #ifdef USE_I2C_MUX_TCA9548
     // Sensors behind the mux are probed later, so its channel must be open by then
     i2cMuxTca9548Init();
+#endif
+#ifdef USE_CHARGER_BQ25895
+    bq25895Init();
 #endif
 #endif // USE_I2C
 

@@ -98,6 +98,7 @@ COMMON_SRC = \
             drivers/bus.c \
             drivers/bus_i2c_busdev.c \
             drivers/bus_i2c_mux_tca9548.c \
+            drivers/charger_bq25895.c \
             drivers/bus_i2c_utils.c \
             drivers/accgyro/accgyro_i2c_bmi270.c \
             drivers/bus_i2c_soft.c \
