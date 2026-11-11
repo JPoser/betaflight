@@ -30,6 +30,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #include "hal/adc_ll.h"
+#include "hal/sar_ctrl_ll.h"
 #pragma GCC diagnostic pop
 
 #include "soc/adc_channel.h"
@@ -114,6 +115,13 @@ void adcInit(const adcConfig_t *config)
         adc_ll_enable_bus_clock(true);
         adc_ll_reset_register();
     }
+
+    // Power and clock the SAR ADC, and hand ADC1 to the software-triggered
+    // (RTC) controller. Without these a oneshot conversion never completes.
+    sar_ctrl_ll_set_power_mode(SAR_CTRL_LL_POWER_ON);
+    adc_ll_set_sar_clk_div(ADC_UNIT_1, ADC_LL_SAR_CLK_DIV_DEFAULT(ADC_UNIT_1));
+    adc_oneshot_ll_output_invert(ADC_UNIT_1, ADC_LL_DATA_INVERT_DEFAULT(ADC_UNIT_1));
+    adc_ll_set_controller(ADC_UNIT_1, ADC_LL_CTRL_RTC);
 
     // Configure ADC1 for 12-bit resolution
     adc_oneshot_ll_set_output_bits(ADC_UNIT_1, ADC_BITWIDTH_12);
