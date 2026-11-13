@@ -133,8 +133,10 @@ const uartHardware_t uartHardware[UARTDEV_COUNT] = {
     {
         .identifier = SERIAL_PORT_UART1,
         .reg = (usartResource_t *)UART1,
+        // UART signals reach any pad through the GPIO matrix; PA16 is the
+        // Tildagon badge's CRSF TX (hexpansion port 5 HS2)
         .rxPins = { { .pin = DEFIO_TAG_E(PA18) }, },
-        .txPins = { { .pin = DEFIO_TAG_E(PA17) }, },
+        .txPins = { { .pin = DEFIO_TAG_E(PA17) }, { .pin = DEFIO_TAG_E(PA16) }, },
         .af = 0,
         .irqn = 0,
         .txPriority = 0,
