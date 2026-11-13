@@ -42,6 +42,7 @@
 #include "drivers/accgyro/accgyro_mpu6500.h"
 
 #include "drivers/accgyro/accgyro_spi_bmi160.h"
+#include "drivers/accgyro/accgyro_i2c_bmi270.h"
 #include "drivers/accgyro/accgyro_spi_bmi270.h"
 #include "drivers/accgyro/accgyro_spi_bmi423.h"
 
@@ -530,6 +531,12 @@ STATIC_UNIT_TESTED gyroHardware_e gyroDetect(gyroDev_t *dev)
             gyroHardware = GYRO_BMI270;
             break;
         }
+#ifdef USE_I2C_GYRO
+        if (bmi270I2cGyroDetect(dev)) {
+            gyroHardware = GYRO_BMI270;
+            break;
+        }
+#endif
         FALLTHROUGH;
 #endif
 

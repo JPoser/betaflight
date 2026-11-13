@@ -46,6 +46,7 @@
 #include "drivers/accgyro/accgyro_mpu6050.h"
 #include "drivers/accgyro/accgyro_mpu6500.h"
 #include "drivers/accgyro/accgyro_spi_bmi160.h"
+#include "drivers/accgyro/accgyro_i2c_bmi270.h"
 #include "drivers/accgyro/accgyro_spi_bmi270.h"
 #include "drivers/accgyro/accgyro_spi_bmi423.h"
 #include "drivers/accgyro/accgyro_spi_icm20649.h"
@@ -490,6 +491,16 @@ bool mpuDetect(gyroDev_t *gyro, const gyroDeviceConfig_t *config)
 #ifdef USE_I2C_GYRO
     if (gyro->dev.bus->busType == BUS_TYPE_I2C) {
         gyro->dev.bus->busType_u.i2c.device = I2C_CFG_TO_DEV(config->i2cBus);
+#ifdef USE_ACCGYRO_BMI270
+        // The BMI270 has no MPU-style WHO_AM_I register, so probe for it first
+        gyro->dev.busType_u.i2c.address = config->i2cAddress ? config->i2cAddress : BMI270_I2C_ADDRESS_DEFAULT;
+        if (bmi270I2cDetect(&gyro->dev)) {
+            busDeviceRegister(&gyro->dev);
+            gyro->mpuDetectionResult.sensor = BMI_270_I2C;
+            return true;
+        }
+#endif
+
         gyro->dev.busType_u.i2c.address = config->i2cAddress ? config->i2cAddress : MPU_ADDRESS;
 
         uint8_t sig = 0;
